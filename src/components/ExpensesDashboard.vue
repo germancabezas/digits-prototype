@@ -2,8 +2,12 @@
   <div class="flex-1 flex flex-col h-full">
     <!-- Header -->
     <div class="border-b border-gray-200 px-6 py-4 bg-gradient-to-r from-white via-fuchsia-50 to-emerald-50">
-      <h1 class="text-2xl font-semibold text-gray-900">Expenses</h1>
+      <h1 class="text-2xl font-normal text-gray-900">Expenses</h1>
     </div>
+
+    <!-- <fwb-alert type="success">
+      Success! You can now use Flowbite Vue in your Vue application 🎉
+    </fwb-alert> -->
 
     <!-- Tabs -->
     <div class="bg-white border-b border-gray-200">
@@ -147,6 +151,8 @@ import { ref, computed } from 'vue';
 import TransactionTable from './TransactionTable.vue';
 import { projects, categories } from '../data/mockData.js';
 import vendorLabel from '../shared/vendorLabel.vue';
+import { FwbAlert } from 'flowbite-vue'
+
 
 const props = defineProps({
   transactions: {
