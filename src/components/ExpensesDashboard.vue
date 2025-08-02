@@ -39,7 +39,7 @@
     </div>
 
     <!-- Content Area -->
-    <div class="flex-1 overflow-auto">
+    <div class="flex-1 overflow-auto manual">
       <!-- AI Categorization Tab -->
       <div v-if="activeTab === 'ai'" class="p-6">
         <!-- Sub-tabs for AI Categorization -->
@@ -97,14 +97,14 @@
         <!-- Manual Transaction Table -->
         <div class="bg-white rounded-lg border border-gray-200">
           <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
+            <table class="min-w-full divide-y divide-gray-200 need-verification">
               <thead class="bg-gray-50">
                 <tr>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category -M</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activity</th>
                 </tr>
               </thead>
@@ -156,6 +156,31 @@ import { projects, categories } from '../data/mockData.js';
 import vendorLabel from '../shared/vendorLabel.vue';
 import { EnvelopeIcon, CreditCardIcon, ChartBarIcon, ChatBubbleLeftRightIcon, SparklesIcon } from '@heroicons/vue/24/outline';
 
+
+  import {
+    Combobox,
+    ComboboxInput,
+    ComboboxOptions,
+    ComboboxOption,
+  } from '@headlessui/vue'
+
+  const people = [
+    'Durward Reynolds',
+    'Kenton Towne',
+    'Therese Wunsch',
+    'Benedict Kessler',
+    'Katelyn Rohan',
+  ]
+  const selectedPerson = ref(people[0])
+  const query = ref('')
+
+  const filteredPeople = computed(() =>
+    query.value === ''
+      ? people
+      : people.filter((person) => {
+          return person.toLowerCase().includes(query.value.toLowerCase())
+        })
+  )
 
 
 const props = defineProps({

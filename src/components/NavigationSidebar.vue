@@ -69,6 +69,7 @@
             {{ userType === 'accountant' ? 'Casey (Accountant)' : 'Avery (Client)' }}
           </p>
           <p class="text-xs text-gray-500 truncate">{{ userType === 'accountant' ? 'casey@accounting.com' : 'avery@lionsnacks.com' }}</p>
+          
         </div>
       </div>
     </div>

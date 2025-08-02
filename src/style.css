@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "../tailwind.config.css";
 
 /* import Flowbite Vue styles */
 @import "flowbite-vue/index.css";

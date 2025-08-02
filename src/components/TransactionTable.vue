@@ -3,11 +3,11 @@
     <!-- Need Verification Section -->
     <div v-if="needVerificationTransactions.length > 0" class="bg-white rounded-lg border border-gray-200">
       <div class="px-6 py-4 border-b border-gray-200">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-medium text-gray-900">Need Verification</h3>
-          <span class="text-sm text-gray-500">
-            {{ needVerificationTransactions.length }} expenses need verification. Accept our AI category suggestion or ask for more details.
-          </span>
+        <div class="flex items-center justify-items-start">
+          <span class="absolute -m-0.5 h-4 w-4 animate-ping rounded-full bg-sky-400 opacity-75"></span>
+          <h3 class="text-lg font-medium text-gray-900">
+            {{ needVerificationTransactions.length }} <span class="ml-2">Items Need Verification</span></h3>
+          <span class="text-sm ml-4 text-emerald-600">AI Generated Categories: 70% Confidence</span>
         </div>
       </div>
       
@@ -19,7 +19,7 @@
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category -V</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activity</th>
             </tr>
           </thead>
@@ -33,24 +33,30 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ transaction.amount.toFixed(2) }}</td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center space-x-2">
-                  <span class="text-sm text-gray-900">{{ transaction.category }}</span>
-                  <button class="text-gray-400 bg-emerald-300 hover:bg-emerald-700 text-slate-900 font-medium py-1 px-2 rounded-md transition-colors ">
-                    <CheckIcon class="w-4 h-4" />
-                  </button>
-                  <button class="text-gray-400 hover:text-gray-600">
-                    <QuestionMarkCircleIcon class="w-4 h-4" />
-                  </button>
+                  <div class="text-sm w-full text-gray-900 bg-emerald-50 flex items-center justify-between rounded-full border border-dashed border-emerald-300 p-1">
+                    <div class="flex items-center space-x-1 p-2">
+                      {{ transaction.category }}
+                    </div>
+                    <div class="flex items-center space-x-0.5">
+                      <div class="bg-emerald-300 p-2 w-8 h-8 rounded-l-full">
+                        <CheckIcon class="w-4 h-4" />
+                      </div>
+                      <div class="bg-red-300 p-2 w-8 h-8 rounded-r-full">
+                        <XMarkIcon class="w-4 h-4" />
+                      </div>
+                      </div>
+                    </div>
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center space-x-2">
-                  <button class="text-gray-400 hover:text-gray-600">
-                    <EnvelopeIcon class="w-4 h-4" />
-                  </button>
-                  <span v-if="transaction.activity > 0" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-slate-800">
-                    {{ transaction.activity }} New
-                  </span>
-                  <span v-if="transaction.activity > 0" class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                <div class="flex items-center justify-between space-x-2">
+                  <div>
+                    <span v-if="transaction.activity > 0" class="inline-flex gap-2 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-slate-800">
+                      <span v-if="transaction.activity > 0" class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                      {{ transaction.activity }} New
+                    </span>
+                  </div>
+                  <FwbButton color="light"><EnvelopeIcon class="w-4 h-4" /></FwbButton>
                 </div>
               </td>
             </tr>
@@ -60,7 +66,7 @@
     </div>
 
     <!-- Automatic Categorization Section -->
-    <div v-if="automaticTransactions.length > 0" class="bg-white rounded-lg border border-gray-200">
+    <div v-if="automaticTransactions.length > 0" class="bg-white rounded-lg border border-gray-200 transaction-table">
       <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex items-center justify-between">
           <h3 class="text-lg font-medium text-gray-900">Automatic Categorization</h3>
@@ -78,7 +84,7 @@
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category -T</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activity</th>
             </tr>
           </thead>
@@ -90,12 +96,19 @@
                 <vendor-label :name="transaction.vendor" />
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ transaction.amount.toFixed(2) }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ transaction.category }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <select 
+                      v-model="transaction.category" 
+                      class="block w-full rounded-md border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm"
+                    >
+                      <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
+                    </select>
+              </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center space-x-2">
-                  <button class="text-gray-400 hover:text-gray-600">
+                  <FwbButton color="emerald" size="xs" class="flex items-center">
                     <EnvelopeIcon class="w-4 h-4" />
-                  </button>
+                  </FwbButton>
                   <span v-if="transaction.activity > 0" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-slate-800">
                     {{ transaction.activity }} New
                   </span>
@@ -112,8 +125,11 @@
 
 <script setup>
 import { computed } from 'vue';
-import { CheckIcon, QuestionMarkCircleIcon, EnvelopeIcon, BuildingStorefrontIcon } from '@heroicons/vue/24/outline';
+import { CheckIcon, XMarkIcon, QuestionMarkCircleIcon, EnvelopeIcon, BuildingStorefrontIcon } from '@heroicons/vue/24/outline';
 import vendorLabel from '../shared/vendorLabel.vue';
+import { FwbButton, FwbBadge } from 'flowbite-vue';
+import { projects, categories } from '../data/mockData.js';
+
 
 const props = defineProps({
   transactions: {
