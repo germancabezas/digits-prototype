@@ -1,0 +1,174 @@
+<template>
+  <div class="flex-1 flex flex-col h-full">
+    <!-- Header -->
+    <div class="border-b border-gray-200 px-6 py-4 bg-gradient-to-r from-white via-fuchsia-50 to-emerald-50">
+      <h1 class="text-2xl font-semibold text-gray-900">Expenses</h1>
+    </div>
+
+    <!-- Tabs -->
+    <div class="bg-white border-b border-gray-200">
+      <nav class="flex space-x-8 px-6" aria-label="Tabs">
+        <button
+          @click="activeTab = 'ai'"
+          :class="[
+            'py-4 px-1 border-b-2 font-medium text-sm',
+            activeTab === 'ai'
+              ? 'border-emerald-500 text-slate-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+          ]"
+        >
+          AI Categorization
+        </button>
+        <button
+          @click="activeTab = 'manual'"
+          :class="[
+            'py-4 px-1 border-b-2 font-medium text-sm',
+            activeTab === 'manual'
+              ? 'border-emerald-500 text-slate-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+          ]"
+        >
+          Manual Categorization
+        </button>
+      </nav>
+    </div>
+
+    <!-- Content Area -->
+    <div class="flex-1 overflow-auto">
+      <!-- AI Categorization Tab -->
+      <div v-if="activeTab === 'ai'" class="p-6">
+        <!-- Sub-tabs for AI Categorization -->
+        <div class="mb-6">
+          <div class="sm:hidden">
+            <select v-model="activeSubTab" class="block w-full rounded-md border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+              <option value="verification">Need Verification</option>
+              <option value="automatic">Automatic</option>
+            </select>
+          </div>
+          <div class="hidden sm:block">
+            <nav class="flex space-x-4" aria-label="Sub tabs">
+              <button
+                @click="activeSubTab = 'verification'"
+                :class="[
+                  'px-3 py-2 font-medium text-sm rounded-md',
+                  activeSubTab === 'verification'
+                    ? 'bg-emerald-100 text-slate-700'
+                    : 'text-gray-500 hover:text-gray-700'
+                ]"
+              >
+                Need Verification
+              </button>
+              <button
+                @click="activeSubTab = 'automatic'"
+                :class="[
+                  'px-3 py-2 font-medium text-sm rounded-md',
+                  activeSubTab === 'automatic'
+                    ? 'bg-emerald-100 text-slate-700'
+                    : 'text-gray-500 hover:text-gray-700'
+                ]"
+              >
+                Automatic
+              </button>
+            </nav>
+          </div>
+        </div>
+
+        <!-- Transaction Table -->
+        <TransactionTable :transactions="filteredTransactions" />
+      </div>
+
+      <!-- Manual Categorization Tab -->
+      <div v-if="activeTab === 'manual'" class="p-6">
+        <!-- Project Filter -->
+        <div class="mb-6">
+          <div class="flex items-center space-x-4">
+            <select v-model="selectedProject" class="block w-48 rounded-md border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+              <option v-for="project in projects" :key="project" :value="project">{{ project }}</option>
+            </select>
+            <span class="text-sm text-gray-500">Sorting and filtering UI placeholder</span>
+          </div>
+        </div>
+
+        <!-- Manual Transaction Table -->
+        <div class="bg-white rounded-lg border border-gray-200">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activity</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr v-for="transaction in manualTransactions" :key="transaction.id" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ transaction.date }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ transaction.time }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <vendor-label :name="transaction.vendor" />
+                </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ transaction.amount.toFixed(2) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <select 
+                      v-model="transaction.category" 
+                      class="block w-full rounded-md border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm"
+                    >
+                      <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
+                    </select>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center space-x-2">
+                      <button class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                      </button>
+                      <span v-if="transaction.activity > 0" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-slate-800">
+                        {{ transaction.activity }} New
+                      </span>
+                      <span v-if="transaction.activity > 0" class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue';
+import TransactionTable from './TransactionTable.vue';
+import { projects, categories } from '../data/mockData.js';
+import vendorLabel from '../shared/vendorLabel.vue';
+
+const props = defineProps({
+  transactions: {
+    type: Array,
+    default: () => []
+  }
+});
+
+const activeTab = ref('ai');
+const activeSubTab = ref('verification');
+const selectedProject = ref('Project X');
+
+const filteredTransactions = computed(() => {
+  if (activeSubTab.value === 'verification') {
+    return props.transactions.filter(t => t.needsVerification);
+  } else {
+    return props.transactions.filter(t => !t.needsVerification);
+  }
+});
+
+const manualTransactions = computed(() => {
+  // For manual categorization, show all transactions
+  return props.transactions;
+});
+</script>
