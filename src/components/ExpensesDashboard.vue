@@ -21,6 +21,7 @@
               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
           ]"
         >
+          <SparklesIcon class="w-4 h-4 inline-block mr-1" />
           AI Categorization
         </button>
         <button
@@ -125,10 +126,12 @@
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center space-x-2">
-                      <button class="text-gray-400 hover:text-gray-600">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                        </svg>
+                        <button
+                        class="inline-flex items-center justify-center p-2 rounded-md border border-gray-300 bg-white text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
+                        type="button"
+                        aria-label="View Activity"
+                        >
+                        <EnvelopeIcon class="w-4 h-4" />
                       </button>
                       <span v-if="transaction.activity > 0" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-slate-800">
                         {{ transaction.activity }} New
@@ -151,7 +154,8 @@ import { ref, computed } from 'vue';
 import TransactionTable from './TransactionTable.vue';
 import { projects, categories } from '../data/mockData.js';
 import vendorLabel from '../shared/vendorLabel.vue';
-import { FwbAlert } from 'flowbite-vue'
+import { EnvelopeIcon, CreditCardIcon, ChartBarIcon, ChatBubbleLeftRightIcon, SparklesIcon } from '@heroicons/vue/24/outline';
+
 
 
 const props = defineProps({

@@ -34,7 +34,7 @@
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center space-x-2">
                   <span class="text-sm text-gray-900">{{ transaction.category }}</span>
-                  <button class="text-gray-400 hover:text-gray-600">
+                  <button class="text-gray-400 bg-emerald-300 hover:bg-emerald-700 text-slate-900 font-medium py-1 px-2 rounded-md transition-colors ">
                     <CheckIcon class="w-4 h-4" />
                   </button>
                   <button class="text-gray-400 hover:text-gray-600">
