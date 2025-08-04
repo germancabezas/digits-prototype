@@ -16,7 +16,7 @@
         <div class="mb-3">
           <div class="flex items-center justify-between mb-2">
             <span class="text-sm text-gray-500">Was this purchase related to</span>
-            <span class="text-sm font-medium text-gray-900">{{ transaction.category }}</span>
+            <span class="text-sm font-medium text-gray-900">{{ transaction.aiCategory }}</span>
             <button class="text-gray-400 hover:text-gray-600">
               <QuestionMarkCircleIcon class="w-4 h-4" />
             </button>

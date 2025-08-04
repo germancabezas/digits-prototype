@@ -3,7 +3,7 @@
     <!-- Need Verification Section -->
     <div v-if="needVerificationTransactions.length > 0" class="bg-white rounded-lg border border-gray-200">
       <div class="px-6 py-4 border-b border-gray-200">
-        <div class="flex items-center justify-items-start">
+        <div class="flex items-center justify-between relative">
           <span class="absolute -m-0.5 h-4 w-4 animate-ping rounded-full bg-sky-400 opacity-75"></span>
           <h3 class="text-lg font-medium text-gray-900">
             {{ needVerificationTransactions.length }} <span class="ml-2">Items Need Verification</span></h3>
@@ -33,9 +33,9 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ transaction.amount.toFixed(2) }}</td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center space-x-2">
-                  <div class="text-sm w-full text-gray-900 bg-emerald-50 flex items-center justify-between rounded-full border border-dashed border-emerald-300 p-1">
+                  <div class="text-sm w-full text-gray-900 bg-emerald-50 flex items-center justify-between rounded-full border border-dashed border-emerald-300 pl-3 pr-0.5">
                     <div class="flex items-center space-x-1 p-2">
-                      {{ transaction.category }}
+                      {{ transaction.aiCategory }}
                     </div>
                     <div class="flex items-center space-x-0.5">
                       <div class="bg-emerald-300 p-2 w-8 h-8 rounded-l-full">
@@ -70,8 +70,8 @@
       <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex items-center justify-between">
           <h3 class="text-lg font-medium text-gray-900">Automatic Categorization</h3>
-          <span class="text-sm text-gray-500">
-            {{ automaticTransactions.length }} expenses were automatically categorized by our AI agent. Auto categorization happens when the degree of confidence is 90%+
+          <span class="text-sm text-emerald-600">
+            {{ automaticTransactions.length }} AI generated categories: 90% Confidence
           </span>
         </div>
       </div>
@@ -98,7 +98,7 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ transaction.amount.toFixed(2) }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 <select 
-                      v-model="transaction.category" 
+                      v-model="transaction.aiCategory" 
                       class="block w-full rounded-md border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm"
                     >
                       <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
