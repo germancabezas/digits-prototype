@@ -1,13 +1,16 @@
 <template>
   <div class="space-y-6">
     <!-- Need Verification Section -->
-    <div v-if="needVerificationTransactions.length > 0" class="bg-white rounded-lg border border-gray-200">
+    <div 
+      v-if="needVerificationTransactions.length > 0" 
+      class="bg-white rounded-lg border border-green-300 shadow-sm shadow-emerald-300 overflow-x-hidden"
+    >
       <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex items-center justify-between relative">
           <span class="absolute -m-0.5 h-4 w-4 animate-ping rounded-full bg-sky-400 opacity-75"></span>
           <h3 class="text-lg font-medium text-gray-900">
             {{ needVerificationTransactions.length }} <span class="ml-2">Items Need Verification</span></h3>
-          <span class="text-sm ml-4 text-emerald-600">AI Generated Categories: 70% Confidence</span>
+          <span class="text-sm ml-4 text-emerald-600">AI generated categories: 70% + confidence</span>
         </div>
       </div>
       
