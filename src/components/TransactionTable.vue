@@ -56,10 +56,10 @@
                   <div>
                     <span v-if="transaction.activity > 0" class="inline-flex gap-2 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-slate-800">
                       <span v-if="transaction.activity > 0" class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                      {{ transaction.activity }} New asas
+                      {{ transaction.activity }} New
                     </span>
                   </div>
-                  <FwbButton color="light"><EnvelopeIcon class="w-4 h-4" /></FwbButton>
+                  <FwbButton color="light" @click="$emit('toggleMessages', transaction)"><EnvelopeIcon class="w-4 h-4" /></FwbButton>
                 </div>
               </td>
             </tr>
@@ -122,13 +122,14 @@ import vendorLabel from '../shared/vendorLabel.vue';
 import { FwbButton, FwbBadge } from 'flowbite-vue';
 import { projects, categories } from '../data/mockData.js';
 
-
 const props = defineProps({
   transactions: {
     type: Array,
     default: () => []
   }
 });
+
+const emit = defineEmits(['toggleMessages']);
 
 const needVerificationTransactions = computed(() => {
   return props.transactions.filter(t => t.needsVerification);

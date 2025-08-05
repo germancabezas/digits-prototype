@@ -41,27 +41,33 @@
     <!-- Content Area -->
     <div class="flex-1 overflow-auto manual">
       <!-- AI Categorization Tab -->
-      <div v-if="activeTab === 'ai'" class="p-6">
+      <div v-if="activeTab === 'ai'" class="p-6 flex gap-6">
         <!-- Sub-tabs for AI Categorization -->
-
-        <!-- Transaction Table -->
-        <TransactionTable :transactions="filteredTransactions" />
+        <div class="flex-1">
+          <!-- Transaction Table -->
+          <TransactionTable :transactions="filteredTransactions" @toggleMessages="toggleMessages" />
+        </div>
+        <MessageSidePanel
+          v-if="toggleMessageSidePanel && selectedTransaction"
+          :transaction="selectedTransaction"
+          @close="closeMessages"
+        />
       </div>
 
       <!-- Manual Categorization Tab -->
-      <div v-if="activeTab === 'manual'" class="p-6">
-        <!-- Project Filter -->
-        <div class="mb-6">
-          <div class="flex items-center space-x-4">
-            <select v-model="selectedProject" class="block w-48 rounded-md border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
-              <option v-for="project in projects" :key="project" :value="project">{{ project }}</option>
-            </select>
-            <span class="text-sm text-gray-500">Sorting and filtering UI placeholder</span>
-          </div>
+      <div class="mx-6 mt-4 mb-0" v-if="activeTab === 'manual'">
+        <div class="flex items-center space-x-4">
+          <select v-model="selectedProject" class="block w-48 rounded-md border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+            <option v-for="project in projects" :key="project" :value="project">{{ project }}</option>
+          </select>
+          <span class="text-sm text-gray-500">Sorting and filtering UI placeholder</span>
         </div>
+      </div>
+      <div v-if="activeTab === 'manual'" class="p-6 flex gap-6">
+        <!-- Project Filter -->
 
         <!-- Manual Transaction Table -->
-        <div class="bg-white rounded-lg border border-gray-200">
+        <div class="bg-white rounded-lg border border-gray-200 grow">
           <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 need-verification">
               <thead class="bg-gray-50">
@@ -105,10 +111,10 @@
                       <div>
                         <span v-if="transaction.activity > 0" class="inline-flex gap-2 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-slate-800">
                           <span v-if="transaction.activity > 0" class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                          {{ transaction.activity }} New asas
+                          {{ transaction.activity }} New
                         </span>
                       </div>
-                      <FwbButton color="light"><EnvelopeIcon class="w-4 h-4" /></FwbButton>
+                      <FwbButton color="light" @click="toggleMessages(transaction)"><EnvelopeIcon class="w-4 h-4 open-messages" /></FwbButton>
                     </div>
                   </td>
                 </tr>
@@ -116,6 +122,11 @@
             </table>
           </div>
         </div>
+        <MessageSidePanel
+          v-if="toggleMessageSidePanel && selectedTransaction"
+          :transaction="selectedTransaction"
+          @close="closeMessages"
+        />
       </div>
     </div>
   </div>
@@ -124,6 +135,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import TransactionTable from './TransactionTable.vue';
+import MessageSidePanel from './MessageSidePanel.vue';
 import { projects, categories } from '../data/mockData.js';
 import vendorLabel from '../shared/vendorLabel.vue';
 import { FwbButton, FwbBadge } from 'flowbite-vue';
@@ -155,6 +167,25 @@ import { EnvelopeIcon, CreditCardIcon, ChartBarIcon, ChatBubbleLeftRightIcon, Sp
         })
   )
 
+const toggleMessageSidePanel = ref(false);
+const selectedTransaction = ref(null);
+
+const toggleMessages = (transaction) => {
+  if (selectedTransaction.value?.id === transaction.id && toggleMessageSidePanel.value) {
+    // If clicking the same transaction, close the panel
+    toggleMessageSidePanel.value = false;
+    selectedTransaction.value = null;
+  } else {
+    // Open panel with new transaction
+    selectedTransaction.value = transaction;
+    toggleMessageSidePanel.value = true;
+  }
+};
+
+const closeMessages = () => {
+  toggleMessageSidePanel.value = false;
+  selectedTransaction.value = null;
+};
 
 const props = defineProps({
   transactions: {
