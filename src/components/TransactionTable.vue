@@ -56,7 +56,7 @@
                   <div>
                     <span v-if="transaction.activity > 0" class="inline-flex gap-2 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-slate-800">
                       <span v-if="transaction.activity > 0" class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                      {{ transaction.activity }} New
+                      {{ transaction.activity }} New asas
                     </span>
                   </div>
                   <FwbButton color="light"><EnvelopeIcon class="w-4 h-4" /></FwbButton>
@@ -106,17 +106,6 @@
                     >
                       <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
                     </select>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center space-x-2">
-                  <FwbButton color="emerald" size="xs" class="flex items-center">
-                    <EnvelopeIcon class="w-4 h-4" />
-                  </FwbButton>
-                  <span v-if="transaction.activity > 0" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-slate-800">
-                    {{ transaction.activity }} New
-                  </span>
-                  <span v-if="transaction.activity > 0" class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                </div>
               </td>
             </tr>
           </tbody>

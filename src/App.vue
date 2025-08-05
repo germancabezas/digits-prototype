@@ -90,7 +90,7 @@
     </div>
 
     <!-- View Toggle (for demo purposes) -->
-    <div class="fixed bottom-4 right-4 z-50">
+    <!-- <div class="fixed bottom-4 right-4 z-50">
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-3">
         <div class="text-xs text-gray-500 dark:text-gray-400 mb-2">Demo Controls</div>
         <div class="flex flex-col space-y-2">
@@ -108,7 +108,7 @@
           </button>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

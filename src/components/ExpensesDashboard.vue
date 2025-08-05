@@ -83,26 +83,32 @@
                 </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ transaction.amount.toFixed(2) }}</td>
                   <td class="px-6 py-4 whitespace-nowrap">
+
                     <select 
                       v-model="transaction.category" 
-                      class="block w-full rounded-md border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 text-sm"
+                      :class="[
+                      'all-cat-select block w-full rounded-md border-gray-300 text-sm',
+                      transaction.category === 'Uncategorized' ? 'border-red-500' : '',
+                      ]"
                     >
                       <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
                     </select>
+                    <div v-if="transaction.aiConfidence > 90" class="text-slate-500 ml-2 text-xs pt-2">
+                      AI auto-categorized : {{ transaction.aiConfidence }}% confidence.
+                    </div>
+                    <div v-if="transaction.aiConfidence < 90 && transaction.category === 'Uncategorized'" class="text-emerald-600 ml-2 text-xs pt-2">
+                      AI suggested : <b>{{ transaction.aiCategory }}</b> - {{ transaction.aiConfidence }}% confidence. <a class="underline-none inline-block bg-emerald-100 px-2 py-1 rounded cursor-pointer">Accept.</a>
+                    </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center space-x-2">
-                        <button
-                        class="inline-flex items-center justify-center p-2 rounded-md border border-gray-300 bg-white text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
-                        type="button"
-                        aria-label="View Activity"
-                        >
-                        <EnvelopeIcon class="w-4 h-4" />
-                      </button>
-                      <span v-if="transaction.activity > 0" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-slate-800">
-                        {{ transaction.activity }} New
-                      </span>
-                      <span v-if="transaction.activity > 0" class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                    <div class="flex items-center justify-between space-x-2">
+                      <div>
+                        <span v-if="transaction.activity > 0" class="inline-flex gap-2 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-slate-800">
+                          <span v-if="transaction.activity > 0" class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                          {{ transaction.activity }} New asas
+                        </span>
+                      </div>
+                      <FwbButton color="light"><EnvelopeIcon class="w-4 h-4" /></FwbButton>
                     </div>
                   </td>
                 </tr>
@@ -120,7 +126,8 @@ import { ref, computed } from 'vue';
 import TransactionTable from './TransactionTable.vue';
 import { projects, categories } from '../data/mockData.js';
 import vendorLabel from '../shared/vendorLabel.vue';
-import { EnvelopeIcon, CreditCardIcon, ChartBarIcon, ChatBubbleLeftRightIcon, SparklesIcon } from '@heroicons/vue/24/outline';
+import { FwbButton, FwbBadge } from 'flowbite-vue';
+import { EnvelopeIcon, CreditCardIcon, ChartBarIcon, ChatBubbleLeftRightIcon, SparklesIcon, XCircleIcon } from '@heroicons/vue/24/outline';
 
 
   import {
