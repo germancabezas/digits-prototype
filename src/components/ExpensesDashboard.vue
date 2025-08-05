@@ -167,13 +167,6 @@ import { FwbButton, FwbBadge } from 'flowbite-vue';
 import { EnvelopeIcon, CreditCardIcon, ChartBarIcon, ChatBubbleLeftRightIcon, SparklesIcon, XCircleIcon } from '@heroicons/vue/24/outline';
 
 
-  import {
-    Combobox,
-    ComboboxInput,
-    ComboboxOptions,
-    ComboboxOption,
-  } from '@headlessui/vue'
-
   const people = [
     'Durward Reynolds',
     'Kenton Towne',
