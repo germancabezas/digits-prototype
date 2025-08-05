@@ -1,5 +1,7 @@
 <template>
   <div class="space-y-6">
+    <!-- Filters Section -->
+  
     <!-- Need Verification Section -->
     <div 
       v-if="needVerificationTransactions.length > 0" 
@@ -7,10 +9,16 @@
     >
       <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex items-center justify-between relative">
-          <span class="absolute -m-0.5 h-4 w-4 animate-ping rounded-full bg-sky-400 opacity-75"></span>
-          <h3 class="text-lg font-medium text-gray-900">
-            {{ needVerificationTransactions.length }} <span class="ml-2">Items Need Verification</span></h3>
-          <span class="text-sm ml-4 text-emerald-600">AI generated categories: 70% + confidence</span>
+          <div>
+            <span class="absolute -left-2 h-6 w-6 animate-ping rounded-full bg-sky-400 opacity-75"></span>
+            <h3 class="text-lg font-medium text-gray-900">
+              {{ needVerificationTransactions.length }} <span class="ml-2">Items Need Verification</span></h3>
+            <span class="text-sm ml-4 text-emerald-600">AI generated categories: 70% + confidence</span>
+          </div>
+          <ExpenseFilters
+          :initialFilters="currentFilters"
+          @filtersChanged="handleFiltersChanged"
+          />
         </div>
       </div>
       
@@ -116,9 +124,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { CheckIcon, XMarkIcon, QuestionMarkCircleIcon, EnvelopeIcon, BuildingStorefrontIcon } from '@heroicons/vue/24/outline';
 import vendorLabel from '../shared/vendorLabel.vue';
+import ExpenseFilters from './ExpenseFilters.vue';
 import { FwbButton, FwbBadge } from 'flowbite-vue';
 import { projects, categories } from '../data/mockData.js';
 
@@ -130,6 +139,24 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['toggleMessages']);
+
+// Current filters state
+const currentFilters = ref({
+  selectedClient: '',
+  selectedProject: '',
+  selectedVendor: '',
+  dateFrom: '',
+  dateTo: '',
+  amountMin: '',
+  amountMax: '',
+  selectedCategory: ''
+});
+
+// Handle filters changed from ExpenseFilters component
+const handleFiltersChanged = (newFilters) => {
+  currentFilters.value = { ...newFilters };
+  // Here you can add filtering logic when needed
+};
 
 const needVerificationTransactions = computed(() => {
   return props.transactions.filter(t => t.needsVerification);

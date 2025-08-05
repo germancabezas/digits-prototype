@@ -55,19 +55,25 @@
       </div>
 
       <!-- Manual Categorization Tab -->
-      <div class="mx-6 mt-4 mb-0" v-if="activeTab === 'manual'">
-        <div class="flex items-center space-x-4">
-          <select v-model="selectedProject" class="block w-48 rounded-md border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
-            <option v-for="project in projects" :key="project" :value="project">{{ project }}</option>
-          </select>
-          <span class="text-sm text-gray-500">Sorting and filtering UI placeholder</span>
+       <div v-if="activeTab !== 'ai'" class="mx-6 mt-6 mb-0 px-6 py-4 border rounded-t-lg border-gray-200 bg-white">
+        <div class="flex items-center justify-between relative">
+          <div>
+            <h3 class="text-lg font-medium text-gray-900">All Expenses</h3>
+            <span class="text-sm text-slate-600">Some items were auto-categorized by AI.</span>
+          </div>
+          <ExpenseFilters
+          :initialFilters="currentFilters"
+          @filtersChanged="handleFiltersChanged"
+          />
         </div>
       </div>
-      <div v-if="activeTab === 'manual'" class="p-6 flex gap-6">
+
+
+      <div v-if="activeTab === 'manual'" class="p-6 pt-0 flex gap-6">
         <!-- Project Filter -->
 
         <!-- Manual Transaction Table -->
-        <div class="bg-white rounded-lg border border-gray-200 grow">
+        <div class="bg-white rounded-lg rounded-t-none border-x border-b border-gray-200 grow">
           <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 need-verification">
               <thead class="bg-gray-50">
@@ -136,6 +142,7 @@
 import { ref, computed } from 'vue';
 import TransactionTable from './TransactionTable.vue';
 import MessageSidePanel from './MessageSidePanel.vue';
+import ExpenseFilters from './ExpenseFilters.vue';
 import { projects, categories } from '../data/mockData.js';
 import vendorLabel from '../shared/vendorLabel.vue';
 import { FwbButton, FwbBadge } from 'flowbite-vue';
@@ -196,7 +203,24 @@ const props = defineProps({
 
 const activeTab = ref('ai');
 const activeSubTab = ref('verification');
-const selectedProject = ref('Project X');
+
+// Current filters state
+const currentFilters = ref({
+  selectedClient: '',
+  selectedProject: '',
+  selectedVendor: '',
+  dateFrom: '',
+  dateTo: '',
+  amountMin: '',
+  amountMax: '',
+  selectedCategory: ''
+});
+
+// Handle filters changed from ExpenseFilters component
+const handleFiltersChanged = (newFilters) => {
+  currentFilters.value = { ...newFilters };
+  // Here you can add filtering logic when needed
+};
 
 const filteredTransactions = computed(() => {
   if (activeSubTab.value === 'verification') {
