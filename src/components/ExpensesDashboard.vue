@@ -108,13 +108,13 @@
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">            
                 <tr v-for="transaction in manualTransactions" :key="transaction.id" :class="['hover:bg-gray-50 trans', highlightTransaction(transaction) ? 'bg-emerald-50' : '']">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ transaction.date }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ transaction.time }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td class="px-6 py-4 whitespace-wrap text-sm text-gray-900">{{ transaction.date }}</td>
+                  <td class="px-6 py-4 whitespace-wrap text-sm text-gray-900">{{ transaction.time }}</td>
+                  <td class="px-6 py-4 whitespace-wrap text-sm text-gray-900">
                     <vendor-label :name="transaction.vendor" />
                 </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ transaction.amount.toFixed(2) }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap">
+                  <td class="px-6 py-4 whitespace-wrap text-sm text-gray-900">${{ transaction.amount.toFixed(2) }}</td>
+                  <td class="px-6 py-4 whitespace-wrap">
 
                     <select 
                       v-model="transaction.category" 
