@@ -39,7 +39,7 @@
             <tr v-for="transaction in needVerificationTransactions" :key="transaction.id" class="hover:bg-gray-50">
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ transaction.date }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ transaction.time }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex items-center space-x-2">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 <vendor-label :name="transaction.vendor" />
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ transaction.amount.toFixed(2) }}</td>
@@ -60,10 +60,8 @@
                     </div>
                 </div>
               </td>
-              <td>
-                <div class="text-xs text-slate-600 px-6 py-3">
+              <td class="text-xs text-slate-600 px-6 py-3 whitespace-normal">
                   {{transaction.aiSummary}}
-                </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center justify-between space-x-2">

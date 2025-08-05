@@ -55,7 +55,7 @@
     </div>
 
     <!-- Content Area -->
-    <div class="flex-1 overflow-auto manual">
+    <div class="overflow-auto manual">
       <!-- AI Categorization Tab -->
       <div v-if="activeTab === 'ai'" class="p-6 flex gap-6">
         <!-- Sub-tabs for AI Categorization -->
@@ -70,27 +70,31 @@
         />
       </div>
 
-      <!-- Manual Categorization Tab -->
-       <div v-if="activeTab !== 'ai'" class="mx-6 mt-6 mb-0 px-6 py-4 border rounded-t-lg border-gray-200 bg-white">
-        <div class="flex items-center justify-between relative">
-          <div>
-            <h3 class="text-lg font-medium text-gray-900">All Expenses</h3>
-            <span class="text-sm text-slate-600">Some items were auto-categorized by AI.</span>
-          </div>
-          <ExpenseFilters
-          :initialFilters="currentFilters"
-          @filtersChanged="handleFiltersChanged"
-          />
-        </div>
-      </div>
-
 
       <div v-if="activeTab === 'manual'" class="p-6 pt-0 flex gap-6">
         <!-- Project Filter -->
 
         <!-- Manual Transaction Table -->
-        <div class="bg-white rounded-lg rounded-t-none border-x border-b border-gray-200 grow">
-          <div class="overflow-x-auto">
+        <div class="bg-white rounded-lg rounded-b-none border-x grow mt-6 border border-slate-200 overflow-hidden">
+
+
+             <!-- Manual Categorization Tab -->
+       <div v-if="activeTab !== 'ai'" class="p-6  bg-white">
+            
+            <div class="flex items-center justify-between relative">
+              <div>
+                <h3 class="text-lg font-medium text-gray-900">All Expenses</h3>
+                <span class="text-sm text-slate-600">Some items were auto-categorized by AI.</span>
+              </div>
+              <ExpenseFilters
+              :initialFilters="currentFilters"
+              @filtersChanged="handleFiltersChanged"
+              />
+            </div>
+          </div>
+
+
+          <div class="overflow-x-auto border-t border-slate-200">
             <table class="min-w-full divide-y divide-gray-200 need-verification">
               <thead class="bg-gray-50">
                 <tr>
@@ -102,8 +106,8 @@
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activity</th>
                 </tr>
               </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="transaction in manualTransactions" :key="transaction.id" class="hover:bg-gray-50">
+              <tbody class="bg-white divide-y divide-gray-200">            
+                <tr v-for="transaction in manualTransactions" :key="transaction.id" :class="['hover:bg-gray-50 trans', highlightTransaction(transaction) ? 'bg-emerald-50' : '']">
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ transaction.date }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ transaction.time }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -124,10 +128,12 @@
                     <div v-if="transaction.aiConfidence > 90" class="text-slate-500 ml-2 text-xs pt-2">
                       AI auto-categorized : {{ transaction.aiConfidence }}% confidence.
                     </div>
-                    <div v-if="transaction.aiConfidence < 90 && transaction.category === 'Uncategorized'" class="text-emerald-600 ml-2 text-xs flex gap-2 items-center pt-2">
+                    <div v-if="transaction.aiConfidence < 90 && transaction.category === 'Uncategorized'" class="text-emerald-600 ml-2 text-xs flex flex-wrap gap-2 items-center pt-2">
                       AI suggested : <b>{{ transaction.aiCategory }}</b> - {{ transaction.aiConfidence }}% confidence. 
-                      <a class="underline-none inline-block bg-emerald-100 px-2 py-1 rounded cursor-pointer">Accept.</a>
-                      <a class="underline-none inline-block bg-slate-200 px-2 py-1 rounded cursor-pointer text-slate-600">View Analysis.</a>
+                      <div class="flex gap-2">
+                        <a class="underline-none inline-block bg-emerald-100 px-2 py-1 rounded cursor-pointer">Accept.</a>
+                        <a class="underline-none inline-block bg-slate-200 px-2 py-1 rounded cursor-pointer text-slate-600">View Analysis.</a>
+                        </div>
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
@@ -146,11 +152,13 @@
             </table>
           </div>
         </div>
+        <div class="mt-6">
         <MessageSidePanel
           v-if="toggleMessageSidePanel && selectedTransaction"
           :transaction="selectedTransaction"
           @close="closeMessages"
         />
+        </div>
       </div>
     </div>
   </div>
@@ -188,6 +196,7 @@ import { EnvelopeIcon, CreditCardIcon, ChartBarIcon, ChatBubbleLeftRightIcon, Sp
 const toggleMessageSidePanel = ref(false);
 const selectedTransaction = ref(null);
 
+
 const toggleMessages = (transaction) => {
   if (selectedTransaction.value?.id === transaction.id && toggleMessageSidePanel.value) {
     // If clicking the same transaction, close the panel
@@ -198,6 +207,10 @@ const toggleMessages = (transaction) => {
     selectedTransaction.value = transaction;
     toggleMessageSidePanel.value = true;
   }
+};
+
+const highlightTransaction = (transaction) => {
+  return selectedTransaction ? selectedTransaction.value?.id === transaction.id : false;
 };
 
 const closeMessages = () => {
